@@ -18,7 +18,7 @@ provider "digitalocean" {
 
 module "instance" {
   source             = "git::git@github.com:mehulved/digitalocean_cloudflare_module_terraform.git?ref=v0.0.3"
-  
+
   domain             = "${var.cloudflare_domain}"
   instance_name      = "web"
   instance_region    = "${var.instance_region}"
