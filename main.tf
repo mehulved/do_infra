@@ -1,10 +1,3 @@
-# Set the variable value in *.tfvars file
-# or using -var="var_name=..." CLI option
-variable "do_token" {}
-variable "cloudflare_email" {}
-variable "cloudflare_token" {}
-variable "cloudflare_domain" {}
-
 #Configure cloudflare provider
 provider "cloudflare" {
   email              = "${var.cloudflare_email}"
