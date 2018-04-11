@@ -16,32 +16,13 @@ provider "digitalocean" {
   token              = "${var.do_token}"
 }
 
-# Upload ssh key
-resource "digitalocean_ssh_key" "default" {
-  name               = "T400p SSD"
-  public_key         = "${file("ssh-keys/mehul.pub")}"
-}
-
-# Create a web server
-resource "digitalocean_droplet" "web" {
-  image              = "freebsd-11-1-x64-zfs"
-  name               = "web.mehulved.com"
-  region             = "nyc3"
-  size               = "1gb"
-  backups            = false
-  monitoring         = false
-  ipv6               = true
-  private_networking = true
-  ssh_keys           = ["${digitalocean_ssh_key.default.id}"]
-  resize_disk        = true
-}
-
-# Set DNS record to point to the web server
-resource "cloudflare_record" "web" {
+module "instance" {
+  source             = "git::git@github.com:mehulved/digitalocean_cloudflare_module_terraform.git?ref=v0.0.2"
+  
   domain             = "${var.cloudflare_domain}"
-  name               = "web"
-  value              = "${digitalocean_droplet.web.ipv4_address}"
-  type               = "A"
-  ttl                = 3600
-  proxied            = false
+  instance_name      = "web"
+  instance_region    = "${var.instance_region}"
+  instance_size      = "${var.instance_size}"
+  ssh_keyname        = "T440p SSD"
+  ssh_keypath        = "${file("${path.root}/ssh-keys/mehul.pub")}"
 }
